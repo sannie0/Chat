@@ -14,13 +14,6 @@ namespace WebApiDemo.Controllers
             _logger = logger;
         }
 
-        /*private static List<Chat_Interface> chats = new List<Chat_Interface>(new[]
-        {
-            new Chat_Interface() { Id = 1, ChatName = "SurGu" },
-            new Chat_Interface() { Id = 2, ChatName = "Home" }, 
-            new Chat_Interface() { Id = 3, ChatName = "Contacts" }, 
-        });*/
-
         [HttpPost]
         [Route("CreateChat")]
         public IActionResult CreateChat([FromBody] ChatInterface chat)
