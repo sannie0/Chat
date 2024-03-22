@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApiDemo.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/api/[controller]")]
     public class MessageConroller : ControllerBase
     {
         private readonly ILogger<MessageConroller> _logger;

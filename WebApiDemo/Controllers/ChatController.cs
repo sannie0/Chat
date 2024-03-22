@@ -1,58 +1,39 @@
-using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace WebApiDemo.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/api/[controller]")]
     public class ChatController : ControllerBase
     {
         private readonly ILogger<ChatController> _logger;
+        private readonly IHubContext<ChatHub> _hubContext;
+        private readonly List<ChatInterface> _chatRooms;
 
-        public ChatController(ILogger<ChatController> logger)
+        public ChatController(ILogger<ChatController> logger, IHubContext<ChatHub> hubContext)
         {
             _logger = logger;
+            _hubContext = hubContext;
         }
 
         [HttpPost]
-        [Route("CreateChat")]
-        public IActionResult CreateChat([FromBody] ChatInterface chat)
+        [Route("CreateChatRoom")]
+        public IActionResult CreateChatRoom([FromBody] ChatInterface model)
         {
-            try
+            // Создание новой комнаты чата
+            var chatRoom = new ChatInterface
             {
-                return Ok("Chat created successfully");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
-        
-        
-        [HttpGet]
-        [Route("GetChat/{chatId}")]
-        public IActionResult GetChatById(int Id)
-        {
-            return Ok("Chat created successfully");
-        }
-        
-        
-        /*public IActionResult Get(int id)
-        {
-            var chat = chats.SingleOrDefault(x => x.Id == id);
-            if (chat == null)
-            {
-                return NotFound();
-            }
+                ChatName = model.ChatName, Users = new List<User> { new User { UserName = model.ChatName } }
+            };
+            _chatRooms.Add(chatRoom);
 
-            return Ok(chat);
-        }*/
-        
-        /*[HttpGet("StartChat/{Id}", Name = "StartChat")]
-        public Chat_Interface Get([FromRoute] int Id)
-        {
-            
-            //return Get().FirstOrDefault(x => x.Id == Id)
-        }*/
+            return Ok("Chat room created successfully");
+        }
+
+
+
+
+
     }
 }

@@ -15,6 +15,9 @@ namespace WebApiDemo
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddSignalR();
+
+            //builder.Services.AddScoped<>
 
             var appName = typeof(Program).Assembly.GetName().Name;
 
@@ -37,11 +40,20 @@ namespace WebApiDemo
                 app.UseSwaggerUI();
             }
 
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("Home/Error");
+                app.UseHsts();
+                //app.UseSwaggerUI();
+            }
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.MapHub<ChatHub>("/hub");
 
             app.Run();
         }
