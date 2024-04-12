@@ -1,7 +1,15 @@
+using FluentAssertions.Common;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
+
 
 namespace WebApiDemo.Controllers
+
 {
     [ApiController]
     [Route("/api/[controller]")]
@@ -11,6 +19,12 @@ namespace WebApiDemo.Controllers
         private readonly IHubContext<ChatHub> _hubContext;
         private List<ChatInterface> _chatRooms = new List<ChatInterface>();
 
+        /*private readonly Services.IChatService chatService;
+        public ChatController(Services.IChatService services) //конструктор контроллера
+        {
+            chatService = services;
+        }*/
+        private int lastUserId;
 
         public ChatController(ILogger<ChatController> logger, IHubContext<ChatHub> hubContext)
         {
@@ -19,6 +33,15 @@ namespace WebApiDemo.Controllers
         }
 
         [HttpPost]
+        [Route("AddUserToChat")]
+        public async Task<IActionResult> AddUserToChat(string userId)
+        {
+            await _hubContext.Clients.All.SendAsync("UserAddedToChat", userId);
+            return Ok();
+        }
+
+
+        /*[HttpPost]
         [Route("CreateChatRoom")]
         public IActionResult CreateChatRoom([FromBody] ChatInterface model)
         {
@@ -34,7 +57,7 @@ namespace WebApiDemo.Controllers
                 var chatRoom = new ChatInterface
                 {
                     ChatName = model.ChatName,
-                    Users = new List<User> { new User { UserName = model.ChatName } }
+                    UserName = model.ChatName
                 };
 
                 _chatRooms.Add(chatRoom);// добавление комнаты в коллекцию чатов
@@ -46,7 +69,7 @@ namespace WebApiDemo.Controllers
                 _logger.LogError($"Error occurred while creating chatroom: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
-        }
+        }*/
 
 
 
